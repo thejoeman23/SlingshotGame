@@ -5,7 +5,11 @@ using UnityEngine;
 public class Cursor : MonoBehaviour
 {
     [SerializeField] List<GameObject> objects = new List<GameObject>();
-    [SerializeField] float cursorHeight = 3;
+    [SerializeField] LineRenderer lineRenderer;
+
+    [SerializeField] bool isHolding = false;
+    [SerializeField] float forceMultiplier = 2;
+    float force;
 
     GameObject currentObject;
     GameObject nextObject;
@@ -24,28 +28,52 @@ public class Cursor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         // the sprite renderer must always represent the current object;
         sr.sprite = currentObject.GetComponent<SpriteRenderer>().sprite;
         sr.color = currentObject.GetComponent<SpriteRenderer>().color;
         transform.localScale = currentObject.transform.localScale;
 
         // updates the spawner position to the cursor's position
-        Vector3 cursorPos = Input.mousePosition;
-        float cursorXPos = Camera.main.ScreenToWorldPoint(cursorPos).x;
+        Vector3 cursorScrenPos = Input.mousePosition;
+        Vector3 cursorPos = Camera.main.ScreenToWorldPoint(cursorScrenPos);
 
-        transform.position = new Vector3(cursorXPos, cursorHeight, 0);
+        // when player holds mouse button to aim, this is where they first click
+        Vector3 firstClicked = Vector3.zero;
+        if (Input.GetMouseButtonDown(0)) { firstClicked = cursorPos; }
 
-        if (Input.GetMouseButtonDown(0))
+        // the direction the object will be launched in
+        Vector2 direction = (firstClicked - cursorPos).normalized;
+
+        while (Input.GetMouseButton(0))
         {
-            spawn();
+            isHolding = true;
+
+            force = Vector2.Distance(firstClicked, cursorPos) * forceMultiplier;
+
+            lineRenderer.SetPosition(0, lineRenderer.gameObject.transform.position + ((Vector3)direction * force));
+            lineRenderer.SetPosition(1, lineRenderer.gameObject.transform.position);
+
+            return;
+        }
+
+        if (Input.GetMouseButtonUp(0) && isHolding)
+        {
+            isHolding = false;
+
+            lineRenderer.SetPosition(0, lineRenderer.gameObject.transform.position);
+            lineRenderer.SetPosition(1, lineRenderer.gameObject.transform.position);
+
+            launch(direction);
         }
     }
 
-    void spawn()
+    void launch(Vector2 direction)
     {
         // instantiates the current object
         GameObject newObject = Instantiate(currentObject);
         newObject.transform.position = transform.position;
+        newObject.GetComponent<Rigidbody2D>().linearVelocity = direction * force * forceMultiplier;
 
         // sets a new next object and updates the current one;
         currentObject = nextObject;
