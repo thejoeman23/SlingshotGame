@@ -9,7 +9,11 @@ public class Cursor : MonoBehaviour
 
     [SerializeField] bool isHolding = false;
     [SerializeField] float forceMultiplier = 2;
+    [SerializeField] float blockScale = 1;
+
     float force;
+    Vector2 direction;
+    Vector2 firstClicked;
 
     GameObject currentObject;
     GameObject nextObject;
@@ -35,29 +39,25 @@ public class Cursor : MonoBehaviour
         transform.localScale = currentObject.transform.localScale;
 
         // updates the spawner position to the cursor's position
-        Vector3 cursorScrenPos = Input.mousePosition;
-        Vector3 cursorPos = Camera.main.ScreenToWorldPoint(cursorScrenPos);
+        Vector2 cursorScrenPos = Input.mousePosition;
+        Vector2 cursorPos = Camera.main.ScreenToWorldPoint(cursorScrenPos);
 
         // when player holds mouse button to aim, this is where they first click
-        Vector3 firstClicked = Vector3.zero;
-        if (Input.GetMouseButtonDown(0)) { firstClicked = cursorPos; }
+        if (Input.GetMouseButtonDown(0)) { firstClicked = cursorPos; isHolding = true; }
 
-        // the direction the object will be launched in
-        Vector2 direction = (firstClicked - cursorPos).normalized;
+	if (isHolding) stretchTo(cursorPos);
+    }
 
-        while (Input.GetMouseButton(0))
-        {
-            isHolding = true;
+    // draw a line on the launcher representing the vector between firstClicked and the given position
+    void stretchTo(Vector2 pos) {
 
-            force = Vector2.Distance(firstClicked, cursorPos) * forceMultiplier;
+        force = Vector2.Distance(firstClicked, pos) * forceMultiplier;
+        direction = (firstClicked - pos).normalized; // the direction the object will be launched in
 
-            lineRenderer.SetPosition(0, lineRenderer.gameObject.transform.position + ((Vector3)direction * force));
-            lineRenderer.SetPosition(1, lineRenderer.gameObject.transform.position);
+        lineRenderer.SetPosition(0, lineRenderer.gameObject.transform.position);
+        lineRenderer.SetPosition(1, (Vector2)lineRenderer.gameObject.transform.position + (direction * force * -1));
 
-            return;
-        }
-
-        if (Input.GetMouseButtonUp(0) && isHolding)
+        if (Input.GetMouseButtonUp(0))
         {
             isHolding = false;
 
@@ -78,5 +78,8 @@ public class Cursor : MonoBehaviour
         // sets a new next object and updates the current one;
         currentObject = nextObject;
         nextObject = objects[Random.Range(0, objects.Count)];
+
+	// scale into a random shape, 0.5 minimum
+	nextObject.transform.localScale = new Vector2(0.5f + Random.value * blockScale, 0.5f + Random.value* blockScale);
     }
 }
