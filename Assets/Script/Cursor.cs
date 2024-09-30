@@ -5,6 +5,8 @@ using UnityEngine.WSA;
 
 public class Cursor : MonoBehaviour
 {
+    [SerializeField] TurnScript turnScript;
+
     [SerializeField] List<GameObject> objects = new List<GameObject>();
     [SerializeField] LineRenderer lineRenderer;
     [SerializeField] float forceMultiplier = 2;
@@ -26,6 +28,8 @@ public class Cursor : MonoBehaviour
         // sets current object and next object to a random object in the list
         currentObject = objects[Random.Range(0, objects.Count)];
         nextObject = objects[Random.Range(0, objects.Count)];
+
+        bandPosition = transform.position;
 
         sr = GetComponent<SpriteRenderer>();
     }
@@ -89,5 +93,8 @@ public class Cursor : MonoBehaviour
         // return to the ready to launch position
         bandPosition = transform.parent.position;
         transform.position = transform.parent.position;
+
+        // switches turns
+        turnScript.switchTurns();
     }
 }
