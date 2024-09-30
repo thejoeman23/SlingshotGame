@@ -1,19 +1,20 @@
 using System.Collections.Generic;
 using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.WSA;
 
 public class Cursor : MonoBehaviour
 {
     [SerializeField] List<GameObject> objects = new List<GameObject>();
     [SerializeField] LineRenderer lineRenderer;
-
-    [SerializeField] bool isHolding = false;
     [SerializeField] float forceMultiplier = 2;
     [SerializeField] float blockScale = 1;
 
-    float force;
     Vector2 direction;
     Vector2 firstClicked;
+    public bool stretched = false;
+    float band;
+    Vector2 bandPosition;
 
     GameObject currentObject;
     GameObject nextObject;
@@ -37,38 +38,41 @@ public class Cursor : MonoBehaviour
         sr.sprite = currentObject.GetComponent<SpriteRenderer>().sprite;
         sr.color = currentObject.GetComponent<SpriteRenderer>().color;
         transform.localScale = currentObject.transform.localScale;
+        transform.position = bandPosition; 
 
         // updates the spawner position to the cursor's position
         Vector2 cursorScrenPos = Input.mousePosition;
         Vector2 cursorPos = Camera.main.ScreenToWorldPoint(cursorScrenPos);
 
         // when player holds mouse button to aim, this is where they first click
-        if (Input.GetMouseButtonDown(0)) { firstClicked = cursorPos; isHolding = true; }
+        if (Input.GetMouseButtonDown(0)) { firstClicked = cursorPos; stretched = true; }
 
-	if (isHolding) stretchTo(cursorPos);
+	    if (stretched) stretchTo(cursorPos);
     }
 
     // draw a line on the launcher representing the vector between firstClicked and the given position
     void stretchTo(Vector2 pos) {
 
-        force = Vector2.Distance(firstClicked, pos) * forceMultiplier;
+        band = Vector2.Distance(firstClicked, pos);
         direction = (firstClicked - pos).normalized; // the direction the object will be launched in
 
+        bandPosition = (Vector2)lineRenderer.gameObject.transform.position + (direction * band * -1);
+
         lineRenderer.SetPosition(0, lineRenderer.gameObject.transform.position);
-        lineRenderer.SetPosition(1, (Vector2)lineRenderer.gameObject.transform.position + (direction * force * -1));
+        lineRenderer.SetPosition(1, bandPosition);
 
         if (Input.GetMouseButtonUp(0))
         {
-            isHolding = false;
+            stretched = false;
 
             lineRenderer.SetPosition(0, lineRenderer.gameObject.transform.position);
             lineRenderer.SetPosition(1, lineRenderer.gameObject.transform.position);
 
-            launch(direction);
+            launch(direction, band);
         }
     }
 
-    void launch(Vector2 direction)
+    void launch(Vector2 direction, float force)
     {
         // instantiates the current object
         GameObject newObject = Instantiate(currentObject);
@@ -79,7 +83,11 @@ public class Cursor : MonoBehaviour
         currentObject = nextObject;
         nextObject = objects[Random.Range(0, objects.Count)];
 
-	// scale into a random shape, 0.5 minimum
-	nextObject.transform.localScale = new Vector2(0.5f + Random.value * blockScale, 0.5f + Random.value* blockScale);
+	    // scale into a random shape, 0.5 minimum
+     	nextObject.transform.localScale = new Vector2(0.5f + Random.value * blockScale, 0.5f + Random.value* blockScale);
+
+        // return to the ready to launch position
+        bandPosition = transform.parent.position;
+        transform.position = transform.parent.position;
     }
 }
