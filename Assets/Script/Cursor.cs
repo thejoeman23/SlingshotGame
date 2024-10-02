@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.WSA;
@@ -15,6 +16,7 @@ public class Cursor : MonoBehaviour
     Vector2 direction;
     Vector2 firstClicked;
     public bool stretched = false;
+    public bool launched = false;
     float band;
     Vector2 bandPosition;
 
@@ -44,24 +46,33 @@ public class Cursor : MonoBehaviour
         transform.localScale = currentObject.transform.localScale;
         transform.position = bandPosition;
 
-        // updates the spawner position to the cursor's position
         Vector2 cursorScrenPos = Input.mousePosition;
         Vector2 cursorPos = Camera.main.ScreenToWorldPoint(cursorScrenPos);
 
-        // when player holds mouse button to aim, this is where they first click
-        if (Input.GetMouseButtonDown(0)) { firstClicked = cursorPos; stretched = true; }
+        if (launched)
+        {
+            if (towerFell()) gameOver();
+            if (towerMoving(1)) return; // wait for movement to stop
 
-	    if (stretched) stretchTo(cursorPos);
+            // turn is over because its been launched and the tower isn't moving
+            launched = false;
+            turnScript.switchTurns();
+        }
+        else
+        {
+            if (Input.GetMouseButtonDown(0)) { firstClicked = cursorPos; stretched = true; }
+            if (stretched) stretchTo(cursorPos);
+        }
     }
 
     // draw a line on the launcher representing the vector between firstClicked and the given position
-    void stretchTo(Vector2 pos) {
-
+    void stretchTo(Vector2 pos)
+    {
         band = Vector2.Distance(firstClicked, pos);
         direction = (firstClicked - pos).normalized; // the direction the object will be launched in
 
+        // create band, bandPosition is where the projectile sits
         bandPosition = (Vector2)lineRenderer.gameObject.transform.position + (direction * band * -1);
-
         lineRenderer.SetPosition(0, lineRenderer.gameObject.transform.position);
         lineRenderer.SetPosition(1, bandPosition);
 
@@ -80,6 +91,7 @@ public class Cursor : MonoBehaviour
     {
         // instantiates the current object
         GameObject newObject = Instantiate(currentObject);
+        newObject.tag = "projectile";
         newObject.transform.position = transform.position;
         newObject.GetComponent<Rigidbody2D>().linearVelocity = direction * force * forceMultiplier;
 
@@ -87,14 +99,38 @@ public class Cursor : MonoBehaviour
         currentObject = nextObject;
         nextObject = objects[Random.Range(0, objects.Count)];
 
-	    // scale into a random shape
-     	nextObject.transform.localScale = new Vector2(1f + Random.value * blockScale, 1f + Random.value * blockScale);
+        // scale into a random shape
+        nextObject.transform.localScale = new Vector2(1f + Random.value * blockScale, 1f + Random.value * blockScale);
 
         // return to the ready to launch position
         bandPosition = transform.parent.position;
         transform.position = transform.parent.position;
 
-        // switches turns
-        turnScript.switchTurns();
+        launched = true;
+    }
+
+    // returns false if the combined velocity of all blocks are greater than threshold
+    bool towerMoving(float threshold)
+    {
+        GameObject[] tower = GameObject.FindGameObjectsWithTag("projectile");
+        var sumOfVelocity = 0;
+        foreach (GameObject block in tower)
+        {
+            var rb = block.GetComponent<Rigidbody2D>();
+            sumOfVelocity += (int)rb.linearVelocity.magnitude;
+        }
+        print(sumOfVelocity);
+        if (sumOfVelocity > threshold) return true;
+        else return false;
+    }
+
+    // check if anyblocks are below the platform
+    bool towerFell()
+    {
+        return false;
+    }
+
+    void gameOver()
+    {
     }
 }
