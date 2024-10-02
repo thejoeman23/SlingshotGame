@@ -42,7 +42,7 @@ public class Cursor : MonoBehaviour
         sr.sprite = currentObject.GetComponent<SpriteRenderer>().sprite;
         sr.color = currentObject.GetComponent<SpriteRenderer>().color;
         transform.localScale = currentObject.transform.localScale;
-        transform.position = bandPosition; 
+        transform.position = bandPosition;
 
         // updates the spawner position to the cursor's position
         Vector2 cursorScrenPos = Input.mousePosition;
@@ -87,8 +87,8 @@ public class Cursor : MonoBehaviour
         currentObject = nextObject;
         nextObject = objects[Random.Range(0, objects.Count)];
 
-	    // scale into a random shape, 0.5 minimum
-     	nextObject.transform.localScale = new Vector2(0.5f + Random.value * blockScale, 0.5f + Random.value* blockScale);
+	    // scale into a random shape
+     	nextObject.transform.localScale = new Vector2(1f + Random.value * blockScale, 1f + Random.value * blockScale);
 
         // return to the ready to launch position
         bandPosition = transform.parent.position;
