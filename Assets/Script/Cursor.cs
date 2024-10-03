@@ -11,7 +11,6 @@ public class Cursor : MonoBehaviour
     [SerializeField] List<GameObject> objects = new List<GameObject>();
     [SerializeField] LineRenderer lineRenderer;
     [SerializeField] float forceMultiplier = 2;
-    [SerializeField] float blockScale = 1;
 
     Vector2 direction;
     Vector2 firstClicked;
@@ -54,7 +53,7 @@ public class Cursor : MonoBehaviour
             if (towerFell()) gameOver();
             if (towerMoving(1)) return; // wait for movement to stop
 
-            // turn is over because its been launched and the tower isn't moving
+            // turn is over because projectile has been launched and the tower isn't moving
             launched = false;
             turnScript.switchTurns();
         }
@@ -99,12 +98,9 @@ public class Cursor : MonoBehaviour
         currentObject = nextObject;
         nextObject = objects[Random.Range(0, objects.Count)];
 
-        // scale into a random shape
-        nextObject.transform.localScale = new Vector2(1f + Random.value * blockScale, 1f + Random.value * blockScale);
-
         // return to the ready to launch position
-        bandPosition = transform.parent.position;
-        transform.position = transform.parent.position;
+        bandPosition = transform.parent.position + Vector3.up;
+        transform.position = transform.parent.position + Vector3.up;
 
         launched = true;
     }
@@ -112,15 +108,15 @@ public class Cursor : MonoBehaviour
     // returns false if the combined velocity of all blocks are greater than threshold
     bool towerMoving(float threshold)
     {
+        var sumOfMagnitude = 0;
         GameObject[] tower = GameObject.FindGameObjectsWithTag("projectile");
-        var sumOfVelocity = 0;
         foreach (GameObject block in tower)
         {
             var rb = block.GetComponent<Rigidbody2D>();
-            sumOfVelocity += (int)rb.linearVelocity.magnitude;
+            sumOfMagnitude += (int)rb.linearVelocity.magnitude;
         }
-        print(sumOfVelocity);
-        if (sumOfVelocity > threshold) return true;
+        print("Tower Movement: " + sumOfMagnitude);
+        if (sumOfMagnitude > threshold) return true;
         else return false;
     }
 
