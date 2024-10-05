@@ -10,14 +10,16 @@ using UnityEngine.WSA;
 public class Cursor : MonoBehaviour
 {
     [SerializeField] TurnScript turnScript;
+    [SerializeField] PointSystem pointSystem;
 
     [SerializeField] List<GameObject> objects = new List<GameObject>();
     [SerializeField] LineRenderer lineRenderer;
-    [SerializeField] float forceMultiplier = 2;
+    [SerializeField] float forceMultiplier = 5;
 
     Vector2 direction;
     Vector2 firstClicked;
-    public int score = 0;
+    public int myPoints = 0;
+    public bool isPlayerOne;
     public bool stretched = false;
     public bool launched = false;
     float band;
@@ -36,6 +38,8 @@ public class Cursor : MonoBehaviour
 
         bandPosition = transform.position;
 
+        if (transform.parent.name == "Player 1") isPlayerOne = true;
+
         sr = GetComponent<SpriteRenderer>();
     }
 
@@ -49,8 +53,8 @@ public class Cursor : MonoBehaviour
         transform.localScale = currentObject.transform.localScale;
         transform.position = bandPosition;
 
-        Vector2 cursorScrenPos = Input.mousePosition;
-        Vector2 cursorPos = Camera.main.ScreenToWorldPoint(cursorScrenPos);
+        Vector2 cursorScreenPos = Input.mousePosition;
+        Vector2 cursorPos = Camera.main.ScreenToWorldPoint(cursorScreenPos);
 
         if (launched)
         {
@@ -60,13 +64,11 @@ public class Cursor : MonoBehaviour
             // destroy all blocks that are out of bounds
             GameObject[] fallen = fallenObj(tower);
             if (fallen.Count() > 0) {
-                score += fallen.Count();
+                myPoints += fallen.Count();
+                pointSystem.addPoints(isPlayerOne, fallen.Count());
                 foreach (GameObject obj in fallen) Destroy(obj);
                 return; // go to next update cycle to update the tower array
             }
-
-            print("fallen: " + fallen.Count());
-            print("score: " + score);
 
             if (towerMoving(tower)) return; // wait for movement to stop by going to the next update cycle
 
@@ -127,12 +129,8 @@ public class Cursor : MonoBehaviour
     {
         var threshold = 0;
         var sumOfMagnitude = 0;
-        foreach (GameObject block in tower)
-        {
-            var rb = block.GetComponent<Rigidbody2D>();
-            sumOfMagnitude += (int)rb.linearVelocity.magnitude;
-        }
-        // print("Tower Movement: " + sumOfMagnitude);
+        foreach (GameObject obj in tower)
+            sumOfMagnitude += (int)obj.GetComponent<Rigidbody2D>().linearVelocity.magnitude;
         if (sumOfMagnitude > threshold) return true;
         else return false;
     }
@@ -140,13 +138,12 @@ public class Cursor : MonoBehaviour
     // returns an array of all the projectiles which are out of bounds
     GameObject[] fallenObj(GameObject[] tower)
     {
-        var buffer = 2; // so that object can be stretched out of bounds without ending the turn early
+        var buffer = 2; // so that objects can be stretched off the screen without ending the turn early
         var fallen = new List<GameObject>();
-        foreach (GameObject block in tower) {
-            if (block.transform.position.y < -5 * buffer || block.transform.position.y > 5 * buffer || 
-                block.transform.position.x < -9 * buffer || block.transform.position.x > 9 * buffer
+        foreach (GameObject block in tower)
+            if (block.transform.position.x < -9 * buffer || block.transform.position.x > 9 * buffer || 
+                block.transform.position.y < -5 * buffer 
             ) fallen.Add(block);
-        }
         return fallen.ToArray();
     }
 

@@ -13,7 +13,7 @@ public class PointSystem : MonoBehaviour
     bool isFading1;
     bool isFading2;
 
-    public void addpoints(bool isPlayer1, float points)
+    public void addPoints(bool isPlayer1, float points)
     {
         if (isPlayer1)
         {
