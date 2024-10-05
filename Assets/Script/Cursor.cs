@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.WSA;
 
 public class Cursor : MonoBehaviour
@@ -14,6 +17,7 @@ public class Cursor : MonoBehaviour
 
     Vector2 direction;
     Vector2 firstClicked;
+    public int score = 0;
     public bool stretched = false;
     public bool launched = false;
     float band;
@@ -27,8 +31,8 @@ public class Cursor : MonoBehaviour
     private void Start()
     {
         // sets current object and next object to a random object in the list
-        currentObject = objects[Random.Range(0, objects.Count)];
-        nextObject = objects[Random.Range(0, objects.Count)];
+        currentObject = objects[UnityEngine.Random.Range(0, objects.Count)];
+        nextObject = objects[UnityEngine.Random.Range(0, objects.Count)];
 
         bandPosition = transform.position;
 
@@ -50,10 +54,23 @@ public class Cursor : MonoBehaviour
 
         if (launched)
         {
-            if (towerFell()) gameOver();
-            if (towerMoving(1)) return; // wait for movement to stop
+            // the tower is an array of all the launched gameObjects
+            GameObject[] tower = GameObject.FindGameObjectsWithTag("projectile");
+            
+            // destroy all blocks that are out of bounds
+            GameObject[] fallen = fallenObj(tower);
+            if (fallen.Count() > 0) {
+                score += fallen.Count();
+                foreach (GameObject obj in fallen) Destroy(obj);
+                return; // go to next update cycle to update the tower array
+            }
 
-            // turn is over because projectile has been launched and the tower isn't moving
+            print("fallen: " + fallen.Count());
+            print("score: " + score);
+
+            if (towerMoving(tower)) return; // wait for movement to stop by going to the next update cycle
+
+            // turn is over because all projectiles are in bounds, and the tower isn't moving
             launched = false;
             turnScript.switchTurns();
         }
@@ -96,7 +113,7 @@ public class Cursor : MonoBehaviour
 
         // sets a new next object and updates the current one;
         currentObject = nextObject;
-        nextObject = objects[Random.Range(0, objects.Count)];
+        nextObject = objects[UnityEngine.Random.Range(0, objects.Count)];
 
         // return to the ready to launch position
         bandPosition = transform.parent.position + Vector3.up;
@@ -105,25 +122,32 @@ public class Cursor : MonoBehaviour
         launched = true;
     }
 
-    // returns false if the combined velocity of all blocks are greater than threshold
-    bool towerMoving(float threshold)
+    // returns false if the combined magnitude of all objects is greater than threshold
+    bool towerMoving(GameObject[] tower)
     {
+        var threshold = 0;
         var sumOfMagnitude = 0;
-        GameObject[] tower = GameObject.FindGameObjectsWithTag("projectile");
         foreach (GameObject block in tower)
         {
             var rb = block.GetComponent<Rigidbody2D>();
             sumOfMagnitude += (int)rb.linearVelocity.magnitude;
         }
-        print("Tower Movement: " + sumOfMagnitude);
+        // print("Tower Movement: " + sumOfMagnitude);
         if (sumOfMagnitude > threshold) return true;
         else return false;
     }
 
-    // check if anyblocks are below the platform
-    bool towerFell()
+    // returns an array of all the projectiles which are out of bounds
+    GameObject[] fallenObj(GameObject[] tower)
     {
-        return false;
+        var buffer = 2; // so that object can be stretched out of bounds without ending the turn early
+        var fallen = new List<GameObject>();
+        foreach (GameObject block in tower) {
+            if (block.transform.position.y < -5 * buffer || block.transform.position.y > 5 * buffer || 
+                block.transform.position.x < -9 * buffer || block.transform.position.x > 9 * buffer
+            ) fallen.Add(block);
+        }
+        return fallen.ToArray();
     }
 
     void gameOver()

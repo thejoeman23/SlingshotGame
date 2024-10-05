@@ -334,5 +334,6 @@ MonoBehaviour:
   - {fileID: 1200443256138753706, guid: 074ce666adc19bb65b19a5607675a34d, type: 3}
   lineRenderer: {fileID: 2375506960704906399}
   forceMultiplier: 7
-  blockScale: 2
+  score: 0
   stretched: 0
+  launched: 0
