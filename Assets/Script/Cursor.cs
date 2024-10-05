@@ -87,14 +87,12 @@ public class Cursor : MonoBehaviour
 
         // create band, bandPosition is where the projectile sits
         bandPosition = (Vector2)lineRenderer.gameObject.transform.position + (direction * band * -1);
-        lineRenderer.SetPosition(0, lineRenderer.gameObject.transform.position);
         lineRenderer.SetPosition(1, bandPosition);
 
         if (Input.GetMouseButtonUp(0))
         {
             stretched = false;
 
-            lineRenderer.SetPosition(0, lineRenderer.gameObject.transform.position);
             lineRenderer.SetPosition(1, lineRenderer.gameObject.transform.position);
 
             launch(direction, band);
