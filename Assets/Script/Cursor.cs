@@ -14,12 +14,13 @@ public class Cursor : MonoBehaviour
 
     Vector2 direction;
     Vector2 firstClicked;
-    public int myPoints = 0;
     public bool isPlayerOne;
     public bool stretched = false;
     public bool launched = false;
     float band;
     Vector2 bandPosition;
+    public int stillnessThreshold = 100; // number of frames the tower has to be still before ending a the turn
+    public int stillness = 0; // the number of frames since the tower moved last
 
     GameObject currentObject;
     GameObject nextObject;
@@ -33,9 +34,7 @@ public class Cursor : MonoBehaviour
         nextObject = objects[UnityEngine.Random.Range(0, objects.Count)];
 
         bandPosition = transform.position;
-
         if (transform.parent.name == "Player 1") isPlayerOne = true;
-
         sr = GetComponent<SpriteRenderer>();
     }
 
@@ -56,27 +55,34 @@ public class Cursor : MonoBehaviour
         {
             // the tower is an array of all the launched gameObjects
             GameObject[] tower = GameObject.FindGameObjectsWithTag("projectile");
-            
-            // destroy all blocks that are out of bounds
+
+            // destroy all blocks that are out of bounds and add points
             GameObject[] fallen = fallenObj(tower);
-            if (fallen.Count() > 0) {
-                myPoints += fallen.Count();
+            if (fallen.Count() > 0)
+            {
                 pointSystem.addPoints(isPlayerOne, fallen.Count());
                 foreach (GameObject obj in fallen) Destroy(obj);
                 return; // go to next update cycle to update the tower array
             }
 
-            if (towerMoving(tower)) return; // wait for movement to stop by going to the next update cycle
+            if (towerMoving(tower)) return;
+            else if (stillness < stillnessThreshold) { stillness++; return; }
 
-            // turn is over because all projectiles are in bounds, and the tower isn't moving
-            launched = false;
-            turnScript.switchTurns();
+            turnOver();
         }
         else
         {
             if (Input.GetMouseButtonDown(0)) { firstClicked = cursorPos; stretched = true; }
             if (stretched) stretchTo(cursorPos);
         }
+    }
+
+    // resets all variables and ends the current player's turn
+    private void turnOver()
+    {
+        stillness = 0;
+        launched = false;
+        turnScript.switchTurns();
     }
 
     // draw a line on the launcher representing the vector between firstClicked and the given position
@@ -135,13 +141,9 @@ public class Cursor : MonoBehaviour
         var buffer = 2; // so that objects can be stretched off the screen without ending the turn early
         var fallen = new List<GameObject>();
         foreach (GameObject block in tower)
-            if (block.transform.position.x < -9 * buffer || block.transform.position.x > 9 * buffer || 
-                block.transform.position.y < -5 * buffer 
+            if (block.transform.position.x < -9 * buffer || block.transform.position.x > 9 * buffer ||
+                block.transform.position.y < -5 * buffer
             ) fallen.Add(block);
         return fallen.ToArray();
-    }
-
-    void gameOver()
-    {
     }
 }
