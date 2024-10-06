@@ -281,6 +281,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
+      propertyPath: gravity
+      value: 7.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
+      propertyPath: resolution
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: turnScript
       value: 
       objectReference: {fileID: 1098659306}
@@ -290,7 +298,7 @@ PrefabInstance:
       objectReference: {fileID: 1098659307}
     - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: forceMultiplier
-      value: 7
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: objects.Array.size
@@ -300,6 +308,10 @@ PrefabInstance:
       propertyPath: 'objects.Array.data[2]'
       value: 
       objectReference: {fileID: 1200443256138753706, guid: bbbfdd0e49eab7f4ca65e0f6c62073e7, type: 3}
+    - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
+      propertyPath: trajectoryPointPrefab
+      value: 
+      objectReference: {fileID: 7787250759622991908, guid: 949007b920f6a5241adf9a92897a1d10, type: 3}
     - target: {fileID: 1163338438988551178, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: m_SortingOrder
       value: 2
@@ -2067,6 +2079,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
+      propertyPath: gravity
+      value: 8.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
+      propertyPath: objectMass
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
+      propertyPath: resolution
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: turnScript
       value: 
       objectReference: {fileID: 1098659306}
@@ -2076,7 +2100,7 @@ PrefabInstance:
       objectReference: {fileID: 1098659307}
     - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: forceMultiplier
-      value: 7
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: objects.Array.size
@@ -2086,6 +2110,10 @@ PrefabInstance:
       propertyPath: 'objects.Array.data[2]'
       value: 
       objectReference: {fileID: 1200443256138753706, guid: bbbfdd0e49eab7f4ca65e0f6c62073e7, type: 3}
+    - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
+      propertyPath: trajectoryPointPrefab
+      value: 
+      objectReference: {fileID: 7787250759622991908, guid: 949007b920f6a5241adf9a92897a1d10, type: 3}
     - target: {fileID: 1163338438988551178, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: m_SortingOrder
       value: 2

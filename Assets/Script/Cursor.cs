@@ -19,17 +19,24 @@ public class Cursor : MonoBehaviour
     public bool launched = false;
     float band;
     Vector2 bandPosition;
-    public int stillnessThreshold = 100; // number of frames the tower has to be still before ending a the turn
-    public int stillness = 0; // the number of frames since the tower moved last
+    public int stillnessThreshold = 100; // Number of frames the tower has to be still before ending the turn
+    public int stillness = 0; // The number of frames since the tower moved last
 
     GameObject currentObject;
     GameObject nextObject;
 
     SpriteRenderer sr;
 
+    [SerializeField] List<GameObject> trajectoryPoints = new List<GameObject>();
+    [SerializeField] GameObject trajectoryPointPrefab; // The prefab for trajectory points
+
+    public float gravity = 1f; // Fixed gravity
+    public int resolution = 10; // Fixed number of points for the trajectory
+    public float objectMass = 100f; // Mass of each object
+
     private void Start()
     {
-        // sets current object and next object to a random object in the list
+        // Sets current object and next object to a random object in the list
         currentObject = objects[UnityEngine.Random.Range(0, objects.Count)];
         nextObject = objects[UnityEngine.Random.Range(0, objects.Count)];
 
@@ -41,8 +48,7 @@ public class Cursor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        // the sprite renderer must always represent the current object;
+        // The sprite renderer must always represent the current object
         sr.sprite = currentObject.GetComponent<SpriteRenderer>().sprite;
         sr.color = currentObject.GetComponent<SpriteRenderer>().color;
         transform.localScale = currentObject.transform.localScale;
@@ -53,16 +59,16 @@ public class Cursor : MonoBehaviour
 
         if (launched)
         {
-            // the tower is an array of all the launched gameObjects
+            // The tower is an array of all the launched gameObjects
             GameObject[] tower = GameObject.FindGameObjectsWithTag("projectile");
 
-            // destroy all blocks that are out of bounds and add points
+            // Destroy all blocks that are out of bounds and add points
             GameObject[] fallen = fallenObj(tower);
             if (fallen.Count() > 0)
             {
                 pointSystem.addPoints(isPlayerOne, fallen.Count());
                 foreach (GameObject obj in fallen) Destroy(obj);
-                return; // go to next update cycle to update the tower array
+                return; // Go to next update cycle to update the tower array
             }
 
             if (towerMoving(tower)) return;
@@ -77,7 +83,7 @@ public class Cursor : MonoBehaviour
         }
     }
 
-    // resets all variables and ends the current player's turn
+    // Resets all variables and ends the current player's turn
     private void turnOver()
     {
         stillness = 0;
@@ -85,21 +91,26 @@ public class Cursor : MonoBehaviour
         turnScript.switchTurns();
     }
 
-    // draw a line on the launcher representing the vector between firstClicked and the given position
+    // Draw a line on the launcher representing the vector between firstClicked and the given position
     void stretchTo(Vector2 pos)
     {
         band = Vector2.Distance(firstClicked, pos);
-        direction = (firstClicked - pos).normalized; // the direction the object will be launched in
+        direction = (firstClicked - pos).normalized; // The direction the object will be launched in
 
-        // create band, bandPosition is where the projectile sits
+        // Create band; bandPosition is where the projectile sits
         bandPosition = (Vector2)lineRenderer.gameObject.transform.position + (direction * band * -1);
         lineRenderer.SetPosition(1, bandPosition);
+
+        // Calculate and display the trajectory using gameObjects
+        List<Vector2> trajectoryPositions = CalculateTrajectory(transform.position, direction, band, forceMultiplier);
+        ShowTrajectory(trajectoryPositions); // New function for trajectory visualization
 
         if (Input.GetMouseButtonUp(0))
         {
             stretched = false;
 
             lineRenderer.SetPosition(1, lineRenderer.gameObject.transform.position);
+            ClearTrajectory(); // Clears the trajectory when launching
 
             launch(direction, band);
         }
@@ -107,38 +118,105 @@ public class Cursor : MonoBehaviour
 
     void launch(Vector2 direction, float force)
     {
-        // instantiates the current object
+        // Instantiates the current object
         GameObject newObject = Instantiate(currentObject);
         newObject.tag = "projectile";
         newObject.transform.position = transform.position;
+
+        // Set the Rigidbody2D's velocity using the calculated direction and force
         newObject.GetComponent<Rigidbody2D>().linearVelocity = direction * force * forceMultiplier;
 
-        // sets a new next object and updates the current one;
+        // Sets a new next object and updates the current one
         currentObject = nextObject;
         nextObject = objects[UnityEngine.Random.Range(0, objects.Count)];
 
-        // return to the ready to launch position
+        // Return to the ready to launch position
         bandPosition = transform.parent.position + Vector3.up;
         transform.position = transform.parent.position + Vector3.up;
 
         launched = true;
     }
 
-    // returns false if the combined magnitude of all objects is greater than threshold
+    // Function to calculate trajectory points
+    public List<Vector2> CalculateTrajectory(Vector2 startPosition, Vector2 direction, float force, float forceMultiplier)
+    {
+        List<Vector2> trajectoryPoints = new List<Vector2>();
+
+        // Halve the force applied to the initial velocity
+        float scalingFactor = 0.5f;
+        Vector2 initialVelocity = direction * force * forceMultiplier * scalingFactor;
+
+        // Total time until the projectile hits the ground
+        float totalTime = CalculateFlightTime(initialVelocity.y);
+
+        // Calculate trajectory points over time (fixed resolution of 10)
+        float timeStep = totalTime / resolution;
+
+        for (int i = 0; i <= resolution; i++)
+        {
+            float time = i * timeStep;
+            Vector2 point = CalculatePositionAtTime(startPosition, initialVelocity, time);
+            trajectoryPoints.Add(point);
+        }
+
+        return trajectoryPoints;
+    }
+
+
+    // Function to calculate flight time based on initial vertical velocity
+    private float CalculateFlightTime(float initialVerticalVelocity)
+    {
+        // The formula to calculate the time until the object hits the ground
+        return (2 * initialVerticalVelocity) / gravity;
+    }
+
+    // Function to calculate the position of the object at a given time
+    private Vector2 CalculatePositionAtTime(Vector2 startPosition, Vector2 initialVelocity, float time)
+    {
+        float x = startPosition.x + initialVelocity.x * time;
+        float y = startPosition.y + initialVelocity.y * time - 0.5f * gravity * time * time;
+
+        return new Vector2(x, y);
+    }
+
+    // Function to instantiate gameObjects along the trajectory
+    void ShowTrajectory(List<Vector2> points)
+    {
+        // Clear the previous frame's trajectory points
+        ClearTrajectory();
+
+        // Instantiate a new trajectory point at each calculated position
+        foreach (Vector2 point in points)
+        {
+            GameObject trajectoryPoint = Instantiate(trajectoryPointPrefab, point, Quaternion.identity);
+            trajectoryPoints.Add(trajectoryPoint);
+        }
+    }
+
+    // Function to clear previously instantiated trajectory points
+    void ClearTrajectory()
+    {
+        foreach (GameObject point in trajectoryPoints)
+        {
+            Destroy(point);
+        }
+        trajectoryPoints.Clear();
+    }
+
+    // Returns false if the combined magnitude of all objects is greater than threshold
     bool towerMoving(GameObject[] tower)
     {
         var threshold = 0;
         var sumOfMagnitude = 0;
         foreach (GameObject obj in tower)
             sumOfMagnitude += (int)obj.GetComponent<Rigidbody2D>().linearVelocity.magnitude;
-        if (sumOfMagnitude > threshold) return true;
-        else return false;
+        return sumOfMagnitude > threshold;
     }
 
-    // returns an array of all the projectiles which are out of bounds
+    // Returns an array of all the projectiles which are out of bounds
     GameObject[] fallenObj(GameObject[] tower)
     {
-        var buffer = 2; // so that objects can be stretched off the screen without ending the turn early
+        var buffer = 2; // So that objects can be stretched off the screen without ending the turn early
         var fallen = new List<GameObject>();
         foreach (GameObject block in tower)
             if (block.transform.position.x < -9 * buffer || block.transform.position.x > 9 * buffer ||
