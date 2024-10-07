@@ -27,8 +27,10 @@ public class Cursor : MonoBehaviour
 
     SpriteRenderer sr;
 
-    [SerializeField] List<GameObject> trajectoryPoints = new List<GameObject>();
+    List<GameObject> trajectoryPoints = new List<GameObject>();
     [SerializeField] GameObject trajectoryPointPrefab; // The prefab for trajectory points
+
+    [SerializeField] Animator animator;
 
     public float gravity = 1f; // Fixed gravity
     public int resolution = 10; // Fixed number of points for the trajectory
@@ -59,6 +61,9 @@ public class Cursor : MonoBehaviour
 
         if (launched)
         {
+            animator.SetBool("Shot", true);
+            animator.SetBool("IsHolding", false);
+
             // The tower is an array of all the launched gameObjects
             GameObject[] tower = GameObject.FindGameObjectsWithTag("projectile");
 
@@ -79,7 +84,12 @@ public class Cursor : MonoBehaviour
         else
         {
             if (Input.GetMouseButtonDown(0)) { firstClicked = cursorPos; stretched = true; }
-            if (stretched) stretchTo(cursorPos);
+            if (stretched) 
+            {
+                stretchTo(cursorPos);
+                animator.SetBool("IsHolding", true);
+                animator.SetBool("Shot", false);
+            };
         }
     }
 
