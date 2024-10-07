@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Cursor : MonoBehaviour
+public class Player : MonoBehaviour
 {
-    [SerializeField] TurnScript turnScript;
-    [SerializeField] PointSystem pointSystem;
-
     [SerializeField] List<GameObject> objects = new List<GameObject>();
     [SerializeField] LineRenderer lineRenderer;
     [SerializeField] float forceMultiplier = 5;
 
     Vector2 direction;
     Vector2 firstClicked;
-    public bool isPlayerOne;
+    [SerializeField] bool canLaunch = true;
     public bool stretched = false;
     public bool launched = false;
     float band;
@@ -43,7 +40,6 @@ public class Cursor : MonoBehaviour
         nextObject = objects[UnityEngine.Random.Range(0, objects.Count)];
 
         bandPosition = transform.position;
-        if (transform.parent.name == "Player 1") isPlayerOne = true;
         sr = GetComponent<SpriteRenderer>();
     }
 
@@ -67,23 +63,15 @@ public class Cursor : MonoBehaviour
             // The tower is an array of all the launched gameObjects
             GameObject[] tower = GameObject.FindGameObjectsWithTag("projectile");
 
-            // Destroy all blocks that are out of bounds and add points
-            GameObject[] fallen = fallenObj(tower);
-            if (fallen.Count() > 0)
-            {
-                pointSystem.addPoints(isPlayerOne, fallen.Count());
-                foreach (GameObject obj in fallen) Destroy(obj);
-                return; // Go to next update cycle to update the tower array
-            }
-
             if (towerMoving(tower)) return;
             else if (stillness < stillnessThreshold) { stillness++; return; }
 
-            turnOver();
+            launched = false;
+            canLaunch = true;
         }
         else
         {
-            if (Input.GetMouseButtonDown(0)) { firstClicked = cursorPos; stretched = true; }
+            if (Input.GetMouseButtonDown(0) & canLaunch) { firstClicked = cursorPos; stretched = true; }
             if (stretched)
             {
                 stretchTo(cursorPos);
@@ -91,14 +79,6 @@ public class Cursor : MonoBehaviour
                 animator.SetBool("Shot", false);
             };
         }
-    }
-
-    // Resets all variables and ends the current player's turn
-    private void turnOver()
-    {
-        stillness = 0;
-        launched = false;
-        turnScript.switchTurns();
     }
 
     // Draw a line on the launcher representing the vector between firstClicked and the given position
@@ -123,6 +103,7 @@ public class Cursor : MonoBehaviour
             ClearTrajectory(); // Clears the trajectory when launching
 
             launch(direction, band);
+            canLaunch = false;
         }
     }
 
@@ -222,17 +203,4 @@ public class Cursor : MonoBehaviour
             sumOfMagnitude += (int)obj.GetComponent<Rigidbody2D>().linearVelocity.magnitude;
         return sumOfMagnitude > threshold;
     }
-
-    // Returns an array of all the projectiles which are out of bounds
-    GameObject[] fallenObj(GameObject[] tower)
-    {
-        var buffer = 2; // So that objects can be stretched off the screen without ending the turn early
-        var fallen = new List<GameObject>();
-        foreach (GameObject block in tower)
-            if (block.transform.position.x < -9 * buffer || block.transform.position.x > 9 * buffer ||
-                block.transform.position.y < -5 * buffer
-            ) fallen.Add(block);
-        return fallen.ToArray();
-    }
 }
-

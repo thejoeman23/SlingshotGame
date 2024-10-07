@@ -20,8 +20,8 @@ public class PointSystem : MonoBehaviour
     [SerializeField] GameObject player2;
 
     // current points of the player
-    float player1Current;
-    float player2Current;
+    float player1Current = 10;
+    float player2Current = 10;
 
     bool isFading1;
     bool isFading2;
@@ -41,7 +41,7 @@ public class PointSystem : MonoBehaviour
     {
         if (isPlayer1)
         {
-            player1Current += points;
+            player1Current -= points;
 
             StartCoroutine(pointsEffect1());
 
