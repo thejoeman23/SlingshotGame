@@ -45,18 +45,18 @@ public class PointSystem : MonoBehaviour
 
             StartCoroutine(pointsEffect1());
 
-            if (player1Current >= 10)
+            if (player1Current <= 0)
             {
                 endGame(player2);
             }
         }
         else
         {
-            player2Current += points;
+            player2Current -= points;
 
             StartCoroutine(pointsEffect2());
 
-            if (player2Current >= 10)
+            if (player2Current <= 0)
             {
                 endGame(player1);
             }

@@ -12,18 +12,22 @@ public class Cursor : MonoBehaviour
     [SerializeField] LineRenderer lineRenderer;
     [SerializeField] float forceMultiplier = 5;
 
-    Vector2 direction;
-    Vector2 firstClicked;
     public bool isPlayerOne;
     public bool stretched = false;
     public bool launched = false;
-    float band;
-    Vector2 bandPosition;
-    public int stillnessThreshold = 100; // Number of frames the tower has to be still before ending the turn
-    public int stillness = 0; // The number of frames since the tower moved last
+    public float gravity = 1f; // Fixed gravity
+    public int resolution = 10; // Fixed number of points for the trajectory
+    public float objectMass = 100f; // Mass of each object
 
-    GameObject currentObject;
-    GameObject nextObject;
+    private Vector2 direction;
+    private Vector2 firstClicked;
+    private Vector2 bandPosition;
+    public int stillnessThreshold = 200; // Number of frames the tower has to be still before ending the turn
+    private float band;
+    private int stillness = 0; // The number of frames since the tower moved last
+
+    private GameObject currentObject;
+    private GameObject nextObject;
 
     SpriteRenderer sr;
 
@@ -31,10 +35,6 @@ public class Cursor : MonoBehaviour
     [SerializeField] GameObject trajectoryPointPrefab; // The prefab for trajectory points
 
     [SerializeField] Animator animator;
-
-    public float gravity = 1f; // Fixed gravity
-    public int resolution = 10; // Fixed number of points for the trajectory
-    public float objectMass = 100f; // Mass of each object
 
     private void Start()
     {
@@ -59,7 +59,7 @@ public class Cursor : MonoBehaviour
         Vector2 cursorScreenPos = Input.mousePosition;
         Vector2 cursorPos = Camera.main.ScreenToWorldPoint(cursorScreenPos);
 
-        if (launched)
+        if (launched) // launched phase
         {
             animator.SetBool("Shot", true);
             animator.SetBool("IsHolding", false);
@@ -81,7 +81,7 @@ public class Cursor : MonoBehaviour
 
             turnOver();
         }
-        else
+        else // stretched phase
         {
             if (Input.GetMouseButtonDown(0)) { firstClicked = cursorPos; stretched = true; }
             if (stretched)
@@ -89,7 +89,7 @@ public class Cursor : MonoBehaviour
                 stretchTo(cursorPos);
                 animator.SetBool("IsHolding", true);
                 animator.SetBool("Shot", false);
-            };
+            }
         }
     }
 
@@ -235,4 +235,3 @@ public class Cursor : MonoBehaviour
         return fallen.ToArray();
     }
 }
-
