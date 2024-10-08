@@ -338,5 +338,9 @@ MonoBehaviour:
   isPlayerOne: 0
   stretched: 0
   launched: 0
+  gravity: 1
+  resolution: 10
+  objectMass: 100
   stillnessThreshold: 100
-  stillness: 0
+  trajectoryPointPrefab: {fileID: 0}
+  animator: {fileID: 0}

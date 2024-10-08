@@ -8,8 +8,8 @@ using UnityEngine;
 public class PointSystem : MonoBehaviour
 {
     // the text that displays the players points
-    [SerializeField] TextMeshProUGUI player1Points;
-    [SerializeField] TextMeshProUGUI player2Points;
+    [SerializeField] GameObject player1Health;
+    [SerializeField] GameObject player2Health;
 
     [SerializeField] GameObject winScreen;
     [SerializeField] TextMeshProUGUI winTextObject;
@@ -20,8 +20,8 @@ public class PointSystem : MonoBehaviour
     [SerializeField] GameObject player2;
 
     // current points of the player
-    float player1Current = 10;
-    float player2Current = 10;
+    float player1Current = 5;
+    float player2Current = 5;
 
     bool isFading1;
     bool isFading2;
@@ -31,87 +31,47 @@ public class PointSystem : MonoBehaviour
         winScreen.SetActive(false);
     }
 
-    private void Update()
-    {
-        player1Points.text = player1Current.ToString();
-        player2Points.text = player2Current.ToString();
-    }
-
-    public void addPoints(bool isPlayer1, float points)
+    public void addPoints(bool isPlayer1)
     {
         if (isPlayer1)
         {
-            player1Current -= points;
-
-            StartCoroutine(pointsEffect1());
+            player1Current--;
 
             if (player1Current <= 0)
             {
                 endGame(player2);
-            }
+                StartCoroutine(healthEffect(player1Health));
+
+            } else { StartCoroutine(healthEffect(player1Health)); }
         }
         else
         {
-            player2Current -= points;
-
-            StartCoroutine(pointsEffect2());
+            player2Current--;
 
             if (player2Current <= 0)
             {
                 endGame(player1);
-            }
+                StartCoroutine(healthEffect(player2Health));
+
+            } else { StartCoroutine(healthEffect(player2Health)); }
         }
     }
 
-    IEnumerator pointsEffect1()
+    IEnumerator healthEffect(GameObject playerHealth)
     {
-        #region
-        if (!isFading1)
+        for (float i = player1Current + 1; i > 0; i--)
         {
-            isFading1 = true;
+            Debug.Log(i);
+            GameObject child = playerHealth.transform.GetChild((int)i - 1).gameObject;
+            
+            // if its the heart closest to the end then destroy it
+            if (i == playerHealth.transform.childCount) { Destroy(child); continue; }
 
-            Tween clearText = player1Points.DOColor(Color.clear, .5f).SetLoops(1);
-            clearText.Play();
-
-            yield return new WaitForSeconds(.5f);
-
-            Tween normalText = player1Points.DOColor(Color.white, .5f).SetLoops(1);
-            normalText.Play();
-
-            isFading1 = false;
-
-            yield return null;
-        } else
-        {
-           yield return null;
+            // shake the other hearts
+            child.transform.DOLocalMoveY(-8, .1f).SetLoops(1).Play();
+            yield return new WaitForSeconds(.1f);
+            child.transform.DOLocalMoveY(-14, .1f).SetLoops(1).Play();
         }
-        #endregion
-    }
-
-    IEnumerator pointsEffect2()
-    {
-        #region
-        if (!isFading2)
-        {
-            isFading2 = true;
-
-            Tween clearText = player2Points.DOColor(Color.clear, .5f).SetLoops(1);
-            clearText.Play();
-
-            yield return new WaitForSeconds(.5f);
-
-            Tween normalText = player2Points.DOColor(Color.white, .5f).SetLoops(1);
-            normalText.Play();
-
-            isFading2 = false;
-
-            yield return null;
-        }
-        else
-        {
-            yield return null;
-        }
-        #endregion
     }
 
     void endGame(GameObject winner)

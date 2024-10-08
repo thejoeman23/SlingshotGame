@@ -1,5 +1,5 @@
+using DG.Tweening;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class Play : MonoBehaviour
 {
     [SerializeField] int scene;
+    [SerializeField] GameObject fadeObject;
 
     // Start is called before the first frame update
     void Start()
@@ -18,7 +19,13 @@ public class Play : MonoBehaviour
 
     void sendToGame()
     {
-        SceneManager.LoadScene(scene);
+        StartCoroutine(transition());
+    }
 
+    IEnumerator transition()
+    {
+        fadeObject.GetComponent<Image>().DOFade(1, 1).SetLoops(1).Play();
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene(scene);
     }
 }

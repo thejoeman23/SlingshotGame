@@ -71,8 +71,9 @@ public class Cursor : MonoBehaviour
             GameObject[] fallen = fallenObj(tower);
             if (fallen.Count() > 0)
             {
-                pointSystem.addPoints(isPlayerOne, fallen.Count());
+                pointSystem.addPoints(isPlayerOne);
                 foreach (GameObject obj in fallen) Destroy(obj);
+                Array.Clear(fallen, 0, fallen.Length);
                 return; // Go to next update cycle to update the tower array
             }
 
@@ -125,7 +126,6 @@ public class Cursor : MonoBehaviour
             launch(direction, band);
         }
     }
-
     void launch(Vector2 direction, float force)
     {
         // Instantiates the current object
