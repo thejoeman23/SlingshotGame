@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Cursor : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class Cursor : MonoBehaviour
     public int stillnessThreshold = 200; // Number of frames the tower has to be still before ending the turn
     private float band;
     private int stillness = 0; // The number of frames since the tower moved last
+    public bool singlePlayer = false;
 
     private GameObject currentObject;
     private GameObject nextObject;
@@ -91,6 +93,11 @@ public class Cursor : MonoBehaviour
                 animator.SetBool("IsHolding", true);
                 animator.SetBool("Shot", false);
             }
+            else if (singlePlayer)// follow the mouse in single player mode
+            {
+                if (cursorPos.x > 0) turnScript.activateRight();
+                else turnScript.activateLeft();
+            }
         }
     }
 
@@ -99,7 +106,7 @@ public class Cursor : MonoBehaviour
     {
         stillness = 0;
         launched = false;
-        turnScript.switchTurns();
+        if (!singlePlayer) turnScript.switchTurns();
     }
 
     // Draw a line on the launcher representing the vector between firstClicked and the given position
