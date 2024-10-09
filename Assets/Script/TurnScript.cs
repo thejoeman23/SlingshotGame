@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -8,6 +9,8 @@ public class TurnScript : MonoBehaviour
     [SerializeField] GameObject player1;
     [SerializeField] GameObject player2;
     [SerializeField] TextMeshProUGUI turnText;
+    [SerializeField] string p1Text = "Player 1";
+    [SerializeField] string p2Text = "Player 2";
 
     bool player1Turn = true;
 
@@ -16,30 +19,26 @@ public class TurnScript : MonoBehaviour
         player1.SetActive(true);
         player2.SetActive(false);
 
-        turnText.text = "Player 1";
+        turnText.text = p1Text;
     }
 
     public void switchTurns()
     {
         player1Turn = !player1Turn;
 
-        if (player1Turn)
-        {
-            player1.SetActive(true);
-            player2.SetActive(false);
+        if (player1Turn) activateRight(); else activateLeft();
+        StartCoroutine(fadeInOut());
+        turnText.text = player1Turn ? p1Text : p2Text;
+    }
 
-            StartCoroutine(fadeInOut());
-
-            turnText.text = "Player 1";
-        } else
-        {
+    public void activateLeft() {
             player1.SetActive(false);
             player2.SetActive(true);
+    }
 
-            StartCoroutine(fadeInOut());
-
-            turnText.text = "Player 2";
-        }
+    public void activateRight() {
+            player1.SetActive(true);
+            player2.SetActive(false);
     }
 
     IEnumerator fadeInOut()
