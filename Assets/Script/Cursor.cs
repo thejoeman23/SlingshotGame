@@ -169,7 +169,7 @@ public class Cursor : MonoBehaviour
         // Calculate trajectory points over time (fixed resolution of 10)
         float timeStep = totalTime / resolution;
 
-        for (int i = 0; i <= resolution; i++)
+        for (int i = 0; i <= resolution/2; i++)
         {
             float time = i * timeStep;
             Vector2 point = CalculatePositionAtTime(startPosition, initialVelocity, time);
