@@ -9,6 +9,8 @@ public class Cursor : MonoBehaviour
     [SerializeField] TurnScript turnScript;
     [SerializeField] PointSystem pointSystem;
 
+    [SerializeField] GameObject objectsHolder;
+
     [SerializeField] List<GameObject> objects = new List<GameObject>();
     [SerializeField] LineRenderer lineRenderer;
     [SerializeField] float forceMultiplier = 5;
@@ -135,8 +137,8 @@ public class Cursor : MonoBehaviour
     }
     void launch(Vector2 direction, float force)
     {
-        // Instantiates the current object
-        GameObject newObject = Instantiate(currentObject);
+        // Instantiates the current objec
+        GameObject newObject = Instantiate(currentObject, objectsHolder.transform);
         newObject.tag = "projectile";
         newObject.transform.position = transform.position;
 
