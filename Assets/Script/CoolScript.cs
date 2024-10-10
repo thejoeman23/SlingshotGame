@@ -11,6 +11,9 @@ public class CoolScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        fadeScreen.gameObject.SetActive(true);
+        logo.gameObject.SetActive(true);
+
         fadeScreen.color = Color.black;
         logo.color = Color.clear;
 

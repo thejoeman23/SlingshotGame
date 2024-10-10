@@ -342,6 +342,5 @@ MonoBehaviour:
   resolution: 10
   objectMass: 100
   stillnessThreshold: 100
-  singlePlayer: 0
   trajectoryPointPrefab: {fileID: 0}
   animator: {fileID: 0}

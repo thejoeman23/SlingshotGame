@@ -19,9 +19,6 @@ public class PointSystem : MonoBehaviour
     [SerializeField] GameObject player1;
     [SerializeField] GameObject player2;
 
-    [SerializeField] bool singlePlayer;
-
-
     // current points of the player
     float player1Current = 5;
     float player2Current = 5;
@@ -42,10 +39,10 @@ public class PointSystem : MonoBehaviour
 
             if (player1Current <= 0)
             {
-                endGame(player2, " Wins!!");
-                StartCoroutine(healthEffect(player1Health, player1Current));
+                endGame(player2);
+                StartCoroutine(healthEffect(player1Health));
 
-            } else { StartCoroutine(healthEffect(player1Health, player1Current)); }
+            } else { StartCoroutine(healthEffect(player1Health)); }
         }
         else
         {
@@ -53,17 +50,18 @@ public class PointSystem : MonoBehaviour
 
             if (player2Current <= 0)
             {
-                endGame(player1, " Wins!!");
-                StartCoroutine(healthEffect(player2Health, player2Current));
+                endGame(player1);
+                StartCoroutine(healthEffect(player2Health));
 
-            } else { StartCoroutine(healthEffect(player2Health, player2Current)); }
+            } else { StartCoroutine(healthEffect(player2Health)); }
         }
     }
 
-    IEnumerator healthEffect(GameObject playerHealth, float current)
+    IEnumerator healthEffect(GameObject playerHealth)
     {
-        for (float i = current + 1; i > 0; i--)
+        for (float i = player1Current + 1; i > 0; i--)
         {
+            Debug.Log(i);
             GameObject child = playerHealth.transform.GetChild((int)i - 1).gameObject;
             
             // if its the heart closest to the end then destroy it
@@ -76,14 +74,13 @@ public class PointSystem : MonoBehaviour
         }
     }
 
-    void endGame(GameObject winner, string message)
+    void endGame(GameObject winner)
     {
         Instantiate(winParticles, winner.transform.position, Quaternion.identity);
 
         winScreen.SetActive(true);
         winScreen.transform.DOLocalMove(Vector3.zero, 1).SetLoops(1).Play();
 
-        if (singlePlayer) winTextObject.text = "Play Again?";
-        else winTextObject.text = winner.name + message;
+        winTextObject.text = winner.name + " Wins!!";
     }
 }

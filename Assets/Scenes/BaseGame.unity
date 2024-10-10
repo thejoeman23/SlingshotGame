@@ -400,37 +400,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1 &444695868
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 444695869}
-  m_Layer: 0
-  m_Name: Objects
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &444695869
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 444695868}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 283.556, y: 289.265, z: -4.564054}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &558205307
 GameObject:
   m_ObjectHideFlags: 0
@@ -465,7 +434,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -3.26, y: -14.24}
+  m_AnchoredPosition: {x: -3.2600098, y: -14.24}
   m_SizeDelta: {x: 25, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &558205309
@@ -578,10 +547,6 @@ PrefabInstance:
       propertyPath: pointSystem
       value: 
       objectReference: {fileID: 1098659307}
-    - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
-      propertyPath: objectsHolder
-      value: 
-      objectReference: {fileID: 444695868}
     - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: forceMultiplier
       value: 10
@@ -759,7 +724,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 0.84313726}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1103,8 +1068,6 @@ MonoBehaviour:
   player1: {fileID: 165932720}
   player2: {fileID: 685945014}
   turnText: {fileID: 1612963816}
-  p1Text: Player 1
-  p2Text: Player 2
 --- !u!114 &1098659307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1259,11 +1222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scene: 0
-<<<<<<< Updated upstream
   fadeObject: {fileID: 0}
-=======
-  fadeObject: {fileID: 2090266444}
->>>>>>> Stashed changes
 --- !u!1 &1239164133
 GameObject:
   m_ObjectHideFlags: 0
@@ -2109,6 +2068,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb21bccd19fdbc949bd085ddbcbe7215, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  landSFX: []
+  pullSlingshot: []
+  shootSlingshot: []
+  buttonPress: []
+  buttonHover: []
 --- !u!82 &1754343532
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2237,7 +2201,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2090266445}
   - {fileID: 964915499}
   - {fileID: 980282136}
   - {fileID: 2118978697}
@@ -2722,81 +2685,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2073225235}
   m_CullTransparentMesh: 1
---- !u!1 &2090266444
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2090266445}
-  - component: {fileID: 2090266447}
-  - component: {fileID: 2090266446}
-  m_Layer: 5
-  m_Name: Image
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &2090266445
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2090266444}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 31.21, y: 31.21, z: 31.21}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 1760131234}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2090266446
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2090266444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 0
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &2090266447
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2090266444}
-  m_CullTransparentMesh: 1
 --- !u!1 &2118978696
 GameObject:
   m_ObjectHideFlags: 0
@@ -2932,11 +2820,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scene: 1
-<<<<<<< Updated upstream
   fadeObject: {fileID: 0}
-=======
-  fadeObject: {fileID: 2090266444}
->>>>>>> Stashed changes
 --- !u!1001 &5052573079802074348
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3006,17 +2890,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1098659306}
     - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
-      propertyPath: isPlayerOne
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: pointSystem
       value: 
       objectReference: {fileID: 1098659307}
-    - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
-      propertyPath: objectsHolder
-      value: 
-      objectReference: {fileID: 444695868}
     - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: forceMultiplier
       value: 10
@@ -3104,4 +2980,3 @@ SceneRoots:
   - {fileID: 758048036}
   - {fileID: 5052573079802074348}
   - {fileID: 583002414}
-  - {fileID: 444695869}

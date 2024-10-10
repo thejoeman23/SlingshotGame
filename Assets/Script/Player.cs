@@ -203,5 +203,4 @@ public class Player : MonoBehaviour
             sumOfMagnitude += (int)obj.GetComponent<Rigidbody2D>().linearVelocity.magnitude;
         return sumOfMagnitude > threshold;
     }
-
 }

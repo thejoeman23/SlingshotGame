@@ -2,14 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Cursor : MonoBehaviour
 {
     [SerializeField] TurnScript turnScript;
     [SerializeField] PointSystem pointSystem;
-
-    [SerializeField] GameObject objectsHolder;
 
     [SerializeField] List<GameObject> objects = new List<GameObject>();
     [SerializeField] LineRenderer lineRenderer;
@@ -28,7 +25,6 @@ public class Cursor : MonoBehaviour
     public int stillnessThreshold = 200; // Number of frames the tower has to be still before ending the turn
     private float band;
     private int stillness = 0; // The number of frames since the tower moved last
-    public bool singlePlayer = false;
 
     private GameObject currentObject;
     private GameObject nextObject;
@@ -95,11 +91,6 @@ public class Cursor : MonoBehaviour
                 animator.SetBool("IsHolding", true);
                 animator.SetBool("Shot", false);
             }
-            else if (singlePlayer)// follow the mouse in single player mode
-            {
-                if (cursorPos.x > 0) turnScript.activateRight();
-                else turnScript.activateLeft();
-            }
         }
     }
 
@@ -108,7 +99,7 @@ public class Cursor : MonoBehaviour
     {
         stillness = 0;
         launched = false;
-        if (!singlePlayer) turnScript.switchTurns();
+        turnScript.switchTurns();
     }
 
     // Draw a line on the launcher representing the vector between firstClicked and the given position
@@ -137,8 +128,8 @@ public class Cursor : MonoBehaviour
     }
     void launch(Vector2 direction, float force)
     {
-        // Instantiates the current objec
-        GameObject newObject = Instantiate(currentObject, objectsHolder.transform);
+        // Instantiates the current object
+        GameObject newObject = Instantiate(currentObject);
         newObject.tag = "projectile";
         newObject.transform.position = transform.position;
 
@@ -171,7 +162,7 @@ public class Cursor : MonoBehaviour
         // Calculate trajectory points over time (fixed resolution of 10)
         float timeStep = totalTime / resolution;
 
-        for (int i = 0; i <= resolution/2; i++)
+        for (int i = 0; i <= resolution; i++)
         {
             float time = i * timeStep;
             Vector2 point = CalculatePositionAtTime(startPosition, initialVelocity, time);
