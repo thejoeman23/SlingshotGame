@@ -430,7 +430,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4df3117f2e019264195c4d4c36a4d907, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scene: 0
+  scene: 2
   fadeObject: {fileID: 1554923606}
 --- !u!114 &288059019
 MonoBehaviour:
@@ -1353,7 +1353,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4df3117f2e019264195c4d4c36a4d907, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scene: 0
+  scene: 3
   fadeObject: {fileID: 1554923606}
 --- !u!114 &1453254920
 MonoBehaviour:
