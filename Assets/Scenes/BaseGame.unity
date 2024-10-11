@@ -640,6 +640,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
+      propertyPath: stillnessThreshold
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: 'objects.Array.data[2]'
       value: 
       objectReference: {fileID: 1200443256138753706, guid: bbbfdd0e49eab7f4ca65e0f6c62073e7, type: 3}
@@ -3028,6 +3032,10 @@ PrefabInstance:
     - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: resolutionDivision
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
+      propertyPath: stillnessThreshold
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: 'objects.Array.data[2]'

@@ -792,6 +792,8 @@ GameObject:
   - component: {fileID: 1098659302}
   - component: {fileID: 1098659306}
   - component: {fileID: 1098659307}
+  - component: {fileID: 1098659309}
+  - component: {fileID: 1098659308}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -911,6 +913,33 @@ MonoBehaviour:
   player1: {fileID: 165932720}
   player2: {fileID: 2121966653}
   singlePlayer: 1
+--- !u!114 &1098659308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1098659301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 915c3cb225b8d28469f4899370992dba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeScreen: {fileID: 964915500}
+--- !u!114 &1098659309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1098659301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73d94b67f4dfb9a4bbad3384f3a4fec3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _circle: {fileID: 3604527120196081671, guid: ec94c8d03518ce6429356eb6bd2ca8be, type: 3}
+  effectSpeed: 0
 --- !u!1 &1214865552
 GameObject:
   m_ObjectHideFlags: 0
@@ -1468,6 +1497,10 @@ PrefabInstance:
       propertyPath: pointSystem
       value: 
       objectReference: {fileID: 1098659307}
+    - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
+      propertyPath: circleEffect
+      value: 
+      objectReference: {fileID: 1098659309}
     - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: singlePlayer
       value: 1
@@ -2647,6 +2680,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1098659307}
     - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
+      propertyPath: circleEffect
+      value: 
+      objectReference: {fileID: 1098659309}
+    - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: singlePlayer
       value: 1
       objectReference: {fileID: 0}
@@ -2656,7 +2693,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: objects.Array.size
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: stillnessThreshold
