@@ -812,6 +812,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   heightDisplay: {fileID: 1612963816}
+  highestHeight: 0
 --- !u!114 &1098659303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1477,7 +1478,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: objects.Array.size
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 605468419511632891, guid: 6c67a9253659db90d991b65bf6a5a418, type: 3}
       propertyPath: stillnessThreshold
@@ -1851,7 +1852,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f147b2449e63061baa00c820baa705d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scrollSpeed: 1
+  scrollSpeed: 2
 --- !u!114 &1754343531
 MonoBehaviour:
   m_ObjectHideFlags: 0
