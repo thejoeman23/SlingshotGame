@@ -14,7 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BuildMode.unity
     guid: c67a5a206f968bb3bb0e2d5a52163f55
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/FunGameMode.unity
     guid: 2ec9d2e5b169bef4599f4ceeb33ba806
   m_configObjects:

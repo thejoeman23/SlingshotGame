@@ -14,7 +14,7 @@ public class heightHandler : MonoBehaviour
 
     private void Start()
     {
-        heightDisplay.text = "0\' 0\"";
+        heightDisplay.text = "Height: null";
         highestHeight = 0; 
         InvokeRepeating("updateDisplay", 0, 0.5f);
     }
@@ -42,6 +42,6 @@ public class heightHandler : MonoBehaviour
 
     string formatHeight(float height, float scale) {
         int inches = (int)Math.Round(height * scale) + 50; // +50 so it isn't negative
-        return (inches / 12).ToString() + "' " + (inches % 12).ToString() + "\"";
+        return "Height: " + (inches / 12).ToString() + "' " + (inches % 12).ToString() + "\"";
     }
 }

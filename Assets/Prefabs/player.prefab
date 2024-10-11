@@ -330,6 +330,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turnScript: {fileID: 0}
   pointSystem: {fileID: 0}
+  circleEffect: {fileID: 0}
   objects:
   - {fileID: 1200443256138753706, guid: fe3648bd5a1d1934eb6b99cd9aa9d16b, type: 3}
   - {fileID: 1200443256138753706, guid: 074ce666adc19bb65b19a5607675a34d, type: 3}
@@ -340,7 +341,9 @@ MonoBehaviour:
   launched: 0
   gravity: 1
   resolution: 10
+  resolutionDivision: 1
   objectMass: 100
   stillnessThreshold: 100
+  singlePlayer: 0
   trajectoryPointPrefab: {fileID: 0}
   animator: {fileID: 0}
