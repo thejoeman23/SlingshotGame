@@ -30,7 +30,7 @@ public class heightHandler : MonoBehaviour
         if (curr.transform.position.y > highest.transform.position.y) highest = curr;
         
         // add some height because
-        heightDisplay.text = formatHeight(highest.transform.position.y, 36f); 
+        heightDisplay.text = formatHeight(highest.transform.position.y, 24f); 
     }
 
     GameObject getHighestNow(GameObject[] tower)
@@ -41,7 +41,7 @@ public class heightHandler : MonoBehaviour
     }
 
     string formatHeight(float height, float scale) {
-        int inches = (int)Math.Round(height * scale) + 50; // +50 so it isn't negative
+        int inches = (int)Math.Round(height * scale) + 55; // +55 so it isn't negative
         return (inches / 12).ToString() + "' " + (inches % 12).ToString() + "\"";
     }
 }
