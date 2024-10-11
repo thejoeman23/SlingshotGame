@@ -8,6 +8,7 @@ public class Cursor : MonoBehaviour
 {
     [SerializeField] TurnScript turnScript;
     [SerializeField] PointSystem pointSystem;
+    [SerializeField] CircleEffect circleEffect;
 
     [SerializeField] List<GameObject> objects = new List<GameObject>();
     [SerializeField] LineRenderer lineRenderer;
@@ -18,6 +19,7 @@ public class Cursor : MonoBehaviour
     public bool launched = false;
     public float gravity = 1f; // Fixed gravity
     public int resolution = 10; // Fixed number of points for the trajectory
+    [SerializeField] float resolutionDivision = 1;
     public float objectMass = 100f; // Mass of each object
 
     private Vector2 direction;
@@ -101,9 +103,12 @@ public class Cursor : MonoBehaviour
         }
     }
 
+    GameObject thrownObject;
+
     // Resets all variables and ends the current player's turn
     private void turnOver()
     {
+        if (thrownObject != null) { circleEffect.playEffect(thrownObject); };
         stillness = 0;
         launched = false;
         if (!singlePlayer) turnScript.switchTurns();
@@ -137,6 +142,7 @@ public class Cursor : MonoBehaviour
     {
         // Instantiates the current object
         GameObject newObject = Instantiate(currentObject);
+        thrownObject = newObject;
         newObject.tag = "projectile";
         newObject.transform.position = transform.position;
 
@@ -169,7 +175,7 @@ public class Cursor : MonoBehaviour
         // Calculate trajectory points over time (fixed resolution of 10)
         float timeStep = totalTime / resolution;
 
-        for (int i = 0; i <= resolution; i++)
+        for (int i = 0; i <= resolution / resolutionDivision; i++)
         {
             float time = i * timeStep;
             Vector2 point = CalculatePositionAtTime(startPosition, initialVelocity, time);

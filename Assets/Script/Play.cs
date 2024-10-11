@@ -24,6 +24,7 @@ public class Play : MonoBehaviour
 
     IEnumerator transition()
     {
+        fadeObject.SetActive(true);
         fadeObject.GetComponent<Image>().DOFade(1, 1).SetLoops(1).Play();
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene(scene);
