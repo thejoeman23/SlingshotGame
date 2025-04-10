@@ -23,9 +23,9 @@ jobs:
           key: ${{ runner.os }}-unity
 
       - name: Set up Unity
-        uses: game-ci/unity-setup@v4
+        uses: game-ci/unity-setup@v2   # ✅ Use v2 to avoid the error
         with:
-          unityVersion: 2022.3.10f1  # Replace this with your Unity version
+          unityVersion: 6000.0.42f1     # 🔁 Replace with your Unity version
 
       - name: Build WebGL
         uses: game-ci/unity-builder@v4
